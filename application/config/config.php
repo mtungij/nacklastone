@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 
 // $config['base_url'] = 'http://localhost:8007/'; 
-$config['base_url'] = 'https://emidcredit.phamasoft.com/'; 
+$config['base_url'] = 'https://nackcredit.loan-pocket.com/'; 
 /*
 |--------------------------------------------------------------------------
 | Index File
