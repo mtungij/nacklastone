@@ -289,17 +289,78 @@ public function create_income_detail(){
         $comp_name = $company->comp_name;
         $comp_phone = $company->comp_phone;
         
-        $data_sms = $this->queries->get_loan_reminder($customer_id);
+        $data_sms = $this->queries->get_sms_penart($customer_id);
+        $data_notifications = $this->queries->get_receive_details_by_customer($customer_id);
+        $branch_income = $this->queries->get_total_receive_amount_by_blanch($blanch_id);
         $phone = $data_sms->phone_no;
         $first_name = $data_sms->f_name;
         $midle_name = $data_sms->m_name;
         $last_name = $data_sms->l_name;
+
+    //         echo "<pre>";
+    // print_r(  $data_notifications);
+    //      exit();
+
+
+        if (!empty($data_notifications)) {
+          $data_notification = $data_notifications[0]; // chukua object ya kwanza
+      } else {
+          $data_notification = null;
+      }
+      
+      // Sasa unaweza tumia safely
+      if ($data_notification) {
+          $empl_name = $data_notification->empl_name;
+          $blanch_name = $data_notification->blanch_name;
+          $first_name = $data_notification->f_name;
+          $middle_name = $data_notification->m_name;
+          $last_name = $data_notification->l_name;
+          $phone_number_single = $data_notification->phone_no;
+          
+      }
+
+      $time = date('d/m/Y h:i A');
+      
+    //  echo "<pre>";
+    // print_r( $branch_income);
+    //      exit();
+
         $massage = 'Ndugu ' . $first_name . ' ' . $last_name . ', ' .
     'Umelipa Faini ya Tsh. ' . number_format($penart_paid) . '. ' .
     'Leta marejesho kwa wakati ili kuepuka adhabu.';
-    //    echo "<pre>";
-    // print_r($massage);
+      //  echo "<pre>";
+    // print_r($data_notifications->receve_amount);
     //      exit();
+
+    $jumla_faini = $penart_paid + $branch_income;
+
+  // echo "<pre>";
+  //   print_r(   $jumla_faini);
+  //        exit();
+
+  // $massage = "Habari, malipo ya faini yamefanyika tawi la {$data_notification->blanch_name}. 
+  // Mteja: {$first_name} {$middle_name} {$last_name} ({$phone_number_single}). 
+  // Afisa: {$data_notification->empl_name}. 
+  // Kiasi: TZS " . number_format($penart_paid, 0) . ". 
+  // Jumla ya faini: TZS " . number_format($jumla_faini, 0) . ".";
+
+ $massage = "Habari, malipo ya faini yamefanyika {$data_notification->blanch_name}. 
+Mteja: {$first_name} {$middle_name} {$last_name} ({$phone_number_single}). 
+Afisa: {$data_notification->empl_name}. 
+Kiasi: " . number_format($penart_paid, 0) . " TZS. 
+Muda: {$time}. 
+Jumla leo tawi: " . number_format($jumla_faini) . " TZS.";
+
+  
+
+$phone_number = [    255629364847, 
+// 255679420326, 
+// 255717682611  
+            ];
+  
+            foreach ($phone_number as  $phone) {
+              $this->sendsms($phone, $massage);
+            }
 
               
               // print_r($amount);
@@ -5744,7 +5805,7 @@ public function sendsms($phone,$massage){
 	//public function sendsms(){f
 	//$phone = '255628323760';
 	//$massage = 'mapenzi yanauwa';
-	$api_key = 'Su33xZCzIDPALbL4';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+	$api_key = '';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 	//$api_key = 'qFzd89PXu1e/DuwbwxOE5uUBn6';
 	//$curl = curl_init();
   $url = "https://sms-api.kadolab.com/api/send-sms";

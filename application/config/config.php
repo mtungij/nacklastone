@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 
 // $config['base_url'] = 'http://localhost:8007/'; 
-$config['base_url'] = 'https://nackcredit.loan-pocket.com/'; 
+ $config['base_url'] = 'https://nackcredit.loan-pocket.com/'; 
 /*
 |--------------------------------------------------------------------------
 | Index File
@@ -489,6 +489,8 @@ $config['compress_output'] = FALSE;
 | helper' page of the user guide for information regarding date handling.
 |
 */
+date_default_timezone_set('Africa/Dar_es_Salaam');
+
 $config['time_reference'] = 'local';
 
 /*

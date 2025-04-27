@@ -2018,6 +2018,53 @@ public function get_blanchAccountremain($blanch_id){
 	return $data->row();
 }
 
+public function get_receive_details_by_customer($customer_id)
+{
+    $sql = "
+        SELECT 
+            r.*, 
+            b.blanch_name, 
+            e.empl_name, 
+            c.f_name, 
+            c.m_name, 
+            c.l_name, 
+            c.phone_no
+        FROM tbl_receve r
+        JOIN tbl_blanch b ON r.blanch_id = b.blanch_id
+        JOIN tbl_employee e ON r.empl = e.empl_id
+        JOIN tbl_customer c ON r.customer_id = c.customer_id
+        WHERE r.customer_id = ?
+    ";
+    $data = $this->db->query($sql, array($customer_id));
+    return $data->result(); // changed to result() because one customer can have many receives
+}
+
+
+
+
+public function get_total_receive_amount_by_blanch($blanch_id)
+{
+    $sql = "
+        SELECT 
+            SUM(r.receve_amount) AS total_receive
+        FROM tbl_receve r
+        WHERE r.blanch_id = ?
+          AND DATE(r.receve_day) = CURDATE()
+    ";
+    $query = $this->db->query($sql, array($blanch_id));
+    $result = $query->row();
+
+    if ($result && isset($result->total_receive)) {
+        return $result->total_receive;
+    } else {
+        return 0;
+    }
+}
+
+
+
+
+
 
 public function get_income_detail($comp_id){
 	$date = date("Y-m-d");
@@ -7046,6 +7093,24 @@ function fetch_loan_active($customer_id)
  	 	$data = $this->db->query("SELECT c.phone_no,c.f_name,c.m_name,c.l_name FROM tbl_customer c   WHERE c.customer_id = '$customer_id'");
  	 return $data->row();
  	 }
+
+
+	  public function get_sms_penart($customer_id)
+	  {
+		  $data = $this->db->query("
+			  SELECT 
+				  c.phone_no,
+				  c.f_name,
+				  c.m_name,
+				  c.l_name,
+				  b.blanch_name
+			  FROM tbl_customer c
+			  JOIN tbl_blanch b ON c.blanch_id = b.blanch_id
+			  WHERE c.customer_id = '$customer_id'
+		  ");
+		  return $data->row();
+	  }
+	  
 
  	 public function get_employee_data_staff($empl_id){
  	$data = $this->db->query("SELECT * FROM tbl_employee WHERE empl_id = '$empl_id'");
