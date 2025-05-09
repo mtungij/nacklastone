@@ -865,6 +865,90 @@ curl_close ($ch);
 //print_r($server_output);
 }
 
+public function send_daily_message()
+    {
+        $comp_id = 100; // Replace with the actual company ID
+        $this->generate_daily_message($comp_id);
+        echo "Daily message sent successfully!";
+    }
+
+	public function generate_daily_message($comp_id)
+	{
+		// Load the required model
+		$this->load->model('queries');
+		
+		// Format the current date
+		$date = date("d/m/Y");
+		
+		// Fetch income details from the model
+		$income_details = $this->queries->get_income_branchwise($comp_id);
+		
+		// Initialize the message
+		$massage = "Faini za leo tarehe $date:\n";
+		
+		// Construct the message from income details
+		foreach ($income_details as $detail) {
+			$massage .= $detail->blanch_name . " = " . number_format($detail->total_receve_amount) . "\n";
+		}
+		
+		// Define recipient numbers
+		$recipient_numbers = [
+			'255629364847',
+			// '255753979112', 
+			// '255679420326'   
+		];
+		
+		// Send the message to all recipients
+		foreach ($recipient_numbers as $phone) {
+			$this->sendsms($phone, $massage);
+		}
+	}
+
+
+public function generate_withdrawal_message()
+{
+    // Load necessary models
+    $this->load->model('queries');
+
+    // Define the company ID
+    $comp_id = $this->session->userdata('comp_id'); // Adjust how you retrieve $comp_id as necessary
+
+    // Get today's date
+    $date = date("d/m/Y");
+
+    // Fetch today's withdrawal data
+    $todayWithdrawals = $this->queries->get_loan_approve_today($comp_id);
+
+	
+    // Construct the message header
+    $message = "Gawa leo tarehe $date:\n";
+
+    // Check if data exists
+    if (!empty($todayWithdrawals)) {
+        // Append details to the message
+        foreach ($todayWithdrawals as $detail) {
+            $message .= $detail->blanch_name . " = " . number_format($detail->total_loan_approved) . "\n";
+        }
+    } else {
+        // No withdrawals found for today
+        $message .= " Hakuna mikopo iliyotolewa leo.\n";
+    }
+
+    // Define recipient numbers
+    $recipient_numbers = [
+        '255629364847',
+        // Add additional numbers if needed
+        // '255753979112',
+        // '255679420326',
+    ];
+
+    // Send the message to all recipients
+    foreach ($recipient_numbers as $recipient_number) {
+        $this->sendsms($recipient_number, $message);
+    }
+	echo "Messages sent successfully!";
+}
+
  
 
 

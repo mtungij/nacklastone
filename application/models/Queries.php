@@ -7110,6 +7110,52 @@ function fetch_loan_active($customer_id)
 		  ");
 		  return $data->row();
 	  }
+
+	  public function get_loan_approve_today($comp_id) {
+		$data = $this->db->query("
+			SELECT 
+				
+				b.blanch_name,
+				SUM(l.loan_aprove) AS total_loan_approved
+			FROM 
+				tbl_loans l
+			LEFT JOIN 
+				tbl_blanch b ON b.blanch_id = l.blanch_id
+			WHERE 
+				l.comp_id = '$comp_id'
+				AND l.loan_status = 'withdrawal'
+				AND DATE(l.disburse_day) = CURDATE()
+			GROUP BY 
+				 b.blanch_name
+			ORDER BY 
+				b.blanch_name ASC
+		");
+		return $data->result();
+	}
+
+	public function get_income_branchwise($comp_id) {
+		$date = date("Y-m-d");
+	
+		$query = "
+			SELECT 
+			   
+				b.blanch_name, 
+				SUM(r.receve_amount) AS total_receve_amount 
+			FROM 
+				tbl_receve r
+			JOIN 
+				tbl_blanch b ON b.blanch_id = r.blanch_id
+			WHERE 
+				r.comp_id = ? 
+				AND r.receve_day = ?
+			GROUP BY 
+				b.blanch_name
+		";
+	
+		// Execute the query with parameter binding
+		$income = $this->db->query($query, [$comp_id, $date]);
+		return $income->result();
+	}
 	  
 
  	 public function get_employee_data_staff($empl_id){
