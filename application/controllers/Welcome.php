@@ -786,12 +786,14 @@ public function send_reminder_auto_receivable($comp_id,$customer_id,$loan_id){
 
 	$phone = $data_sms->phone_no;
 	$first_name = $data_sms->f_name;
-	$midle_name = $data_sms->m_name;
+	$middle_name = $data_sms->m_name;
 	$last_name = $data_sms->l_name;
 
+	$full_name = $first_name . ' ' . $middle_name . ' ' . $last_name;
+
 	$restoration = $loan_restoration->restration;
-	$massage = 'Mpendwa Mteja, tunakukumbusha kulipa rejesho la Tsh ' . number_format($restoration) . 
-           ' kwa ' . $comp_name . ' kabla ya saa 10:30 jioni ili kuepuka faini ya ucheleweshaji';
+	$massage = 'Habari ' . $full_name . ', tafadhali kumbuka kufanya malipo ya Tsh ' . number_format($restoration) . 
+           ' kwa ' . $comp_name . ' kabla ya saa 10:30 jioni ili kuepuka adhabu .';
 
 	//    echo "<pre>";
 	// print_r($phone);
@@ -806,7 +808,15 @@ public function send_reminder_auto_receivable($comp_id,$customer_id,$loan_id){
 public function Send_reminder_automatic_pending(){
 $today = date('Y-m-d');
  $comp_id = 100;
-$data = $this->db->query("SELECT * FROM tbl_loans l LEFT JOIN tbl_customer c ON c.customer_id = l.customer_id WHERE l.comp_id = '$comp_id' AND l.dep_status = 'open' AND l.date_show = '$today' AND l.loan_status = 'withdrawal'");
+
+
+$data = $this->db->query("SELECT * FROM tbl_loans l 
+    LEFT JOIN tbl_customer c ON c.customer_id = l.customer_id 
+    WHERE l.comp_id = '$comp_id' 
+      AND l.dep_status = 'open' 
+      AND l.date_show = '$today' 
+      AND l.loan_status IN ('withdrawal', 'out')");
+
 	$auto_reminder =  $data->result();
 
 	foreach ($auto_reminder as $auto_reminders) {
@@ -829,7 +839,12 @@ public function send_reminder_auto_pending($comp_id,$customer_id,$loan_id){
 	$last_name = $data_sms->l_name;
 
 	$restoration = $loan_restoration->restration;
-	$massage = ' Mteja Rejesho lako la leo Halijapokelewa '.' '. $comp_name .' '. 'Epuka Kuchajiwa  Faini Ya Kulaza Rejesho kwa Kutokulipa kwa Wakati Ahsante.';
+	$full_name = trim($first_name . ' ' . ($middle_name ?? '') . ' ' . $last_name);
+
+	$massage = 'Habari ' . $full_name . ', malipo yako ya leo kwa ' . $comp_name . ' hayajapokelewa hadi sasa. ' . 
+           'Ikiwa tayari umelipa, tafadhali wasiliana nasi kupitia 0629364847. ' . 
+           'Kama bado hujalipa, tafadhali fanya malipo mara moja ili kuepuka kuchukuliwa hatua zaidi. Asante.';
+
 	//    echo "<pre>";
 	// print_r($phone);
 	//      exit();
@@ -859,14 +874,7 @@ public function sendsms($phone,$massage){
     "message" => $massage
   ]));
 
-$server_output = curl_exec($ch);
-curl_close ($ch);
-
-//print_r($server_output);
-}
-
-public function send_daily_message()
-    {
+$server_output = curl_exec($ch); 
         $comp_id = 100; // Replace with the actual company ID
         $this->generate_daily_message($comp_id);
         echo "Daily message sent successfully!";
@@ -894,6 +902,8 @@ public function send_daily_message()
 		// Define recipient numbers
 		$recipient_numbers = [
 			'255629364847',
+			'255753979112',
+			'255679420326',
 			// '255753979112', 
 			// '255679420326'   
 		];
@@ -931,7 +941,7 @@ public function generate_withdrawal_message()
         }
     } else {
         // No withdrawals found for today
-        $message .= " Hakuna mikopo iliyotolewa leo.\n";
+        $message .= " mikopo iliyotolewa leo soon.\n";
     }
 
     // Define recipient numbers
