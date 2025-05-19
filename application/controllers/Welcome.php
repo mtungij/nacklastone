@@ -902,8 +902,7 @@ $server_output = curl_exec($ch);
 		// Define recipient numbers
 		$recipient_numbers = [
 			'255629364847',
-			'255753979112',
-			'255679420326',
+		
 			// '255753979112', 
 			// '255679420326'   
 		];
