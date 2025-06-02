@@ -876,38 +876,43 @@ public function sendsms($phone,$massage){
 
 
     }
+	
 	public function send_daily_message($comp_id = null)
-    {
-        $lock_file = APPPATH . 'cache/send_daily_message_' . date('Ymd') . '.lock';
+{
+    $lock_file = APPPATH . 'cache/send_daily_message_' . date('Ymd') . '.lock';
 
-        if (file_exists($lock_file)) {
-            echo "Ujumbe tayari umetumwa leo."; // Msg ya test
-            return;
-        }
-
-        file_put_contents($lock_file, 'sent');
-
-        $date = date("d/m/Y");
-		$this->load->model('queries');
-        $income_details = $this->queries->get_income_branchwise($comp_id);
-        $massage = "Faini za leo tarehe $date:\n";
-
-        foreach ($income_details as $detail) {
-            $massage .= $detail->blanch_name . " = " . number_format($detail->total_receve_amount) . "\n";
-        }
-
-        $recipient_numbers = [
-            '255629364847',
-            '255753979112',
-            '255679420326'
-        ];
-
-        foreach ($recipient_numbers as $phone) {
-            $this->sendsms($phone, $massage); // function yako ya kutuma SMS
-        }
-
-        echo "<pre>$massage</pre>"; // Msg ya test
+    if (file_exists($lock_file)) {
+        // Lock file imeshapo, tumia ujumbe huu
+        echo "Ujumbe tayari umetumwa leo.";
+        return; // Usendelee tena
     }
+
+    // Tengeneza lock file
+    file_put_contents($lock_file, 'sent');
+
+    // Logic ya kutuma ujumbe
+    $this->load->model('queries');
+    $date = date("d/m/Y");
+    $income_details = $this->queries->get_income_branchwise($comp_id);
+    $massage = "Faini za leo tarehe $date:\n";
+
+    foreach ($income_details as $detail) {
+        $massage .= $detail->blanch_name . " = " . number_format($detail->total_receve_amount) . "\n";
+    }
+
+    $recipient_numbers = [
+        '255629364847',
+        '255753979112',
+        '255679420326'
+    ];
+
+    foreach ($recipient_numbers as $phone) {
+        $this->sendsms($phone, $massage);
+    }
+
+    echo "Ujumbe umetumwa kikamilifu.";
+}
+
 
 
 public function generate_withdrawal_message()
