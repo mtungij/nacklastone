@@ -874,44 +874,41 @@ public function sendsms($phone,$massage){
     "message" => $massage
   ]));
 
-$server_output = curl_exec($ch); 
-        $comp_id = 100; // Replace with the actual company ID
-        $this->generate_daily_message($comp_id);
-        echo "Daily message sent successfully!";
+
     }
 
-
-	
-		// 👇 Hapa ndani weka function yako
-		public function send_daily_message($comp_id = null)
-		{
-			$lock_file = APPPATH . 'cache/send_daily_message_' . date('Ymd') . '.lock';
-	
-			if (file_exists($lock_file)) {
-				return;
-			}
-	
-			file_put_contents($lock_file, 'sent');
-	
-			$date = date("d/m/Y");
-			$income_details = $this->queries->get_income_branchwise($comp_id);
-			$massage = "Faini za leo tarehe $date:\n";
-	
-			foreach ($income_details as $detail) {
-				$massage .= $detail->blanch_name . " = " . number_format($detail->total_receve_amount) . "\n";
-			}
-	
-			$recipient_numbers = [
-				'255629364847',
-				// '255753979112',
-				// '255679420326'
-			];
-	
-			foreach ($recipient_numbers as $phone) {
-				$this->sendsms($phone, $massage);
-			}
+	public function generate_daily_message($comp_id)
+	{
+		// Load the required model
+		$this->load->model('queries');
+		
+		// Format the current date
+		$date = date("d/m/Y");
+		
+		// Fetch income details from the model
+		$income_details = $this->queries->get_income_branchwise($comp_id);
+		
+		// Initialize the message
+		$massage = "Faini za leo tarehe $date:\n";
+		
+		// Construct the message from income details
+		foreach ($income_details as $detail) {
+			$massage .= $detail->blanch_name . " = " . number_format($detail->total_receve_amount) . "\n";
 		}
-	
+		
+		// Define recipient numbers
+		$recipient_numbers = [
+			'255629364847',
+		
+			// '255753979112', 
+			// '255679420326'   
+		];
+		
+		// Send the message to all recipients
+		foreach ($recipient_numbers as $phone) {
+			$this->sendsms($phone, $massage);
+		}
+	}
 
 
 public function generate_withdrawal_message()
