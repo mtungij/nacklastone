@@ -911,7 +911,6 @@ $server_output = curl_exec($ch);
 				$this->sendsms($phone, $massage);
 			}
 		}
-	}
 	
 
 
