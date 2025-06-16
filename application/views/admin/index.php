@@ -13,7 +13,6 @@
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="<?php echo base_url("admin/index"); ?>"><i class="icon-home"></i></a></li>                            
                             <li class="breadcrumb-item active"><?php echo $this->lang->line("dashboard_menu"); ?></li>  
-
                         </ul>
                     </div>
 
