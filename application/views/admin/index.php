@@ -223,37 +223,31 @@
                                 <tbody>
                                     <tr>
                                         <td class="c">JUMLA YA WATEJA</td>
-                                        <td class="align-right"><span class="badge badge-success"><?php echo $all_customer->num_rows(); ?></span></td>
+                                        <td class="align-right"><span class="badge badge-success">20000</span></td>
                                     </tr>
                                     <tr>
                                         <td class="c">WATEJA WAPYA</td>
-                                        <td class="align-right"><span class="badge badge-info"><?php echo $new_customer; ?></span></td>
+                                        <td class="align-right"><span class="badge badge-info">6000</span></td>
                                     </tr>
 
                                     <tr>
                                         <td class="c">WANAUME</td>
-                                        <td class="align-right"><span class="badge badge-info"><?php echo $all_male->num_rows(); ?></span></td>
+                                        <td class="align-right"><span class="badge badge-info">8000</span></td>
                                     </tr>
                                     <tr>
                                         <td class="c">WANAWAKE</td>
-                                        <td class="align-right"><span class="badge badge-danger"><?php echo $all_female->num_rows(); ?></span></td>
+                                        <td class="align-right"><span class="badge badge-danger">12000</span></td>
                                     </tr>
                                     <tr>
                                         <td class="c">WAFANYAKAZI</td>
-                                        <td class="align-right"><span class="badge badge-default"><?php echo $employee->num_rows(); ?></span></td>
-                                    </tr>                              
+                                        <td class="align-right"><span class="badge badge-default">500</span></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                     </div>
-        <?php 
-        $deposit_daily = $this->queries->fetch_today_deposit_daily_comp($comp_id);
-        $depist_weekly = $this->queries->fetch_today_deposit_weekly_comp($comp_id);
-        $deposit_monthly = $this->queries->fetch_today_deposit_monthly_comp($comp_id);
-        $all_deposit = $this->queries->fetch_today_deposit_comp($comp_id);
-        //print_r($all_deposit);
-         ?>
+      
 
                     <div class="col-md-3 col-12">
                    <div class="card">
@@ -265,20 +259,20 @@
                                 <tbody>
                                     <tr>
                                         <td class="c">KILA SIKU</td>
-                                        <td class="align-right"><span class="badge badge-warning"><?php echo number_format($deposit_daily->total_deposit); ?></span></td>
+                                        <td class="align-right"><span class="badge badge-warning">1000</span></td>
                                     </tr>
 
                                     <tr>
                                         <td class="c">WIKI</td>
-                                        <td class="align-right"><span class="badge badge-info"><?php echo number_format($depist_weekly->total_deposit_weekly + $depist_weekly->total_double_wekly); ?></span></td>
+                                        <td class="align-right"><span class="badge badge-info">3000</span></td>
                                     </tr>
                                     <tr>
                                         <td class="c">MWEZI</td>
-                                        <td class="align-right"><span class="badge badge-secondary"><?php echo number_format($deposit_monthly->total_deposit_monthly + $deposit_monthly->total_double_month); ?></span></td>
+                                        <td class="align-right"><span class="badge badge-secondary">5000</span></td>
                                     </tr>
                                     <tr>
                                         <td class="c"><b>JUMLA</b></td>
-                                        <td class="align-right"><b><span class="badge badge-success"><?php echo number_format($all_deposit->total_deposit_all + $all_deposit->total_double_all); ?></span></b></td>
+                                        <td class="align-right"><b><span class="badge badge-success">45000</span></b></td>
                                     </tr>                              
                                 </tbody>
                             </table>

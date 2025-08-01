@@ -354,8 +354,9 @@ Jumla leo tawi: " . number_format($jumla_faini) . " TZS.";
   
 
 $phone_number = [    255629364847, 
-// 255679420326, 
-// 255717682611  
+255679420326, 
+255753979112,
+255717682611  
             ];
   
             foreach ($phone_number as  $phone) {
@@ -1385,6 +1386,7 @@ Afisa aliyesajili ni $employee_name. Kiasi cha mkopo kilichoombwa ni TZS " . num
 
 $phone_number = [    255629364847, 
 255679420326, 
+255753979112,
 255717682611  
             ];
   
